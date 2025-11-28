@@ -1,0 +1,35 @@
+{# app/Views/Blocks/Tables/userAdministrationRows.twig #}
+{% if allUsers is not empty %}
+    {% for user in allUsers %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role_name }}</td>
+            <td class="small text-muted">
+                {% if user.information is defined and user.information %}
+                    {{ user.information|striptags|length > 80
+                    ? user.information|striptags|slice(0, 80) ~ '…'
+                    : user.information|striptags
+                    }}
+                {% else %}
+                    –
+                {% endif %}
+            </td>
+            <td class="text-end">
+                <form method="post" class="d-inline"
+                      onsubmit="return confirm('Opravdu chcete smazat tohoto uživatele?');">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <button type="submit" name="deleteUser" class="btn btn-sm btn-outline-danger">
+                        Smazat uživatele
+                    </button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr>
+        <td colspan="5" class="text-center text-muted py-3">
+            Žádní uživatelé neodpovídají filtru.
+        </td>
+    </tr>
+{% endif %}

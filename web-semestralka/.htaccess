@@ -1,0 +1,33 @@
+RewriteEngine On
+RewriteBase /
+
+# /  ->  /home
+RewriteRule ^$ home [R=302,L]
+
+# existující soubory a složky nepřepisuj
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# /api/events/5  -> index.php?page=api&sub=events/5
+RewriteRule ^api/([A-Za-z0-9_-]+)/([0-9]+)/?$ index.php?page=api&sub=$1/$2 [L,QSA]
+
+# /api/events -> index.php?page=api&sub=events   (to už sice umí i obecné, ale nevadí)
+RewriteRule ^api/([A-Za-z0-9_-]+)/?$ index.php?page=api&sub=$1 [L,QSA]
+
+
+# /profile → index.php?page=profile
+RewriteRule ^([A-Za-z0-9_-]+)/?$ index.php?page=$1 [L,QSA]
+
+# /other/contact → index.php?page=other&sub=contact
+RewriteRule ^([A-Za-z0-9_-]+)/([A-Za-z0-9_-]+)/?$ index.php?page=$1&sub=$2 [L,QSA]
+
+# /home/forgot → index.php?page=home&forgot=1
+RewriteRule ^home/forgot/?$ index.php?page=home&forgot=1 [L,QSA]
+
+# 404
+ErrorDocument 404 /index.php?page=404
+
+# max velikosti uploadu
+php_value upload_max_filesize 2M
+php_value post_max_size 2M

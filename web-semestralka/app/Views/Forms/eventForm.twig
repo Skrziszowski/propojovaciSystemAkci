@@ -1,0 +1,60 @@
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <h3 class="mb-4">Založit novou akci</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <!-- FOTO -->
+                <div class="col-md-3 text-center mb-3">
+                    <img src="" class="rounded mb-3" style="width:130px;height:130px;object-fit:cover;">
+                    <input type="file" name="event_photo" class="form-control form-control-sm mb-2">
+                    <small class="text-muted d-block mb-2">
+                        Maximální velikost souboru: 2 MB.
+                    </small>
+                </div>
+
+                <!-- FORMULÁŘ ÚPRAV -->
+                <div class="col-md-9">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Název akce</label>
+                                <input type="text" name="eventName" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kategorie</label>
+                                <select name="category" class="form-select" required>
+                                    <option value="">Vyberte kategorii</option>
+                                    {% for category in eventCategory %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kapacita</label>
+                                <input type="number" name="capacity" class="form-control" min="0" step="1" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Datum a čas</label>
+                                <input type="datetime-local" name="date" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Informace o akci</label>
+                            <textarea id="eventInfo" name="information" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <button class="btn btn-success px-4" name="createEvent">Uložit změny</button>
+                    </form>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

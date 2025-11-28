@@ -1,0 +1,14 @@
+{
+    "description": "Ukázka composeru.",
+    "require": {
+        "ext-pdo": "*",
+        "phpmailer/phpmailer": "^7.0",
+        "twig/twig": ">=1.0, <3.0"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2"
+        },
+        "sort-packages": true
+    }
+}

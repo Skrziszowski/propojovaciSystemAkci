@@ -1,0 +1,233 @@
+{# app/Views/Blocks/Tables/eventCheck.twig #}
+    <div class="container py-4">
+        <h2 class="mb-4">Potvrzování akcí</h2>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if adminOfferEvents is empty %}
+                    <div class="alert alert-info mb-0">
+                        Aktuálně zde nejsou žádné akce k přijetí.
+                    </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th scope="col">Název akce</th>
+                                <th scope="col">Tvůrce</th>
+                                <th scope="col">Prostor</th>
+                                <th scope="col">Datum a čas</th>
+                                <th scope="col">Kapacita</th>
+                                <th scope="col">Kategorie</th>
+                                <th scope="col">Informace</th>
+                                <th scope="col">Detaily</th>
+                                <th scope="col">Přijmout</th>
+                                <th scope="col" class="text-end">Zamítnout</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for event in adminOfferEvents %}
+                                <tr>
+                                    <td>{{ event.name }}</td>
+                                    <td>{{ event.creator_name }}</td>
+                                    <td>{{ event.place_name }}</td>
+                                    <td>{{ event.date|date('d.m.Y H:i') }}</td>
+                                    <td>
+                                        {% if event.capacity is not null %}
+                                            {{ event.capacity }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ event.category_name }}
+                                    </td>
+                                    <td class="small text-muted">
+                                        {% if event.description is defined and event.description %}
+                                            {{ event.description|striptags|length > 80
+                                            ? event.description|striptags|slice(0, 80) ~ '…'
+                                            : event.description|striptags
+                                            }}
+                                        {% else %}
+                                            –
+                                        {% endif %}
+                                    </td>
+                                    {# Detaily – otevře modal #}
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#eventDetailModal-{{ event.id }}">
+                                            Detaily
+                                        </button>
+                                    </td>
+                                    {# Přijmout #}
+                                    <td>
+                                        <form method="post" class="mb-0">
+                                            <input type="hidden" name="event_id" value="{{ event.id }}">
+                                            <button type="submit" name="adminAcceptEvent" class="btn btn-sm btn-success">
+                                                Přijmout
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                    {# Zamítnout – otevře modal #}
+                                    <td class="text-end">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#declineModal-{{ event.id }}">
+                                            Zamítnout
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Modaly pro detaily #}
+    {% for event in adminOfferEvents %}
+        <div class="modal fade" id="eventDetailModal-{{ event.id }}" tabindex="-1"
+             aria-labelledby="eventDetailLabel-{{ event.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title" id="eventDetailLabel-{{ event.id }}">
+                            {{ event.name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+
+                            {% if event.photoPath %}
+                                <div class="col-md-5 text-center">
+                                    <img src="{{ event.photoPath }}"
+                                         alt="{{ event.name }}"
+                                         class="img-fluid rounded shadow-sm mb-3"
+                                         style="max-height: 220px; object-fit: cover;">
+                                </div>
+                            {% endif %}
+
+                            <div class="{% if event.photoPath %}col-md-7{% else %}col-12{% endif %}">
+                                <dl class="row small mb-0">
+                                    <dt class="col-sm-4">Tvůrce</dt>
+                                    <dd class="col-sm-8">{{ event.creator_name }}</dd>
+
+                                    <dt class="col-sm-4">Prostor</dt>
+                                    <dd class="col-sm-8">{{ event.place_name ?: '-' }}</dd>
+
+                                    <dt class="col-sm-4">Datum a čas</dt>
+                                    <dd class="col-sm-8">{{ event.date|date('d.m.Y H:i') }}</dd>
+
+                                    <dt class="col-sm-4">Kapacita</dt>
+                                    <dd class="col-sm-8">
+                                        {% if event.capacity is not null %}
+                                            {{ event.capacity }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </dd>
+
+                                    <dt class="col-sm-4">Kategorie</dt>
+                                    <dd class="col-sm-8">{{ event.category_name ?: '-' }}</dd>
+
+                                    <dt class="col-sm-4">Stav</dt>
+                                    <dd class="col-sm-8">{{ event.approved }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+
+                        {% if event.description %}
+                            <hr>
+                            <p class="mb-0 small">
+                                {{ event.description|raw }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                            Zavřít
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {# Modaly pro zamítnutí #}
+    {% for event in adminOfferEvents %}
+        <div class="modal fade" id="declineModal-{{ event.id }}" tabindex="-1"
+             aria-labelledby="declineLabel-{{ event.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title" id="declineLabel-{{ event.id }}">
+                            Zamítnout akci – {{ event.name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+
+                    <form method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <p class="small text-muted mb-1">
+                                    Tvůrce: <strong>{{ event.creator_name }}</strong><br>
+                                    Prostor: <strong>{{ event.place_name ?: '-' }}</strong><br>
+                                    Datum: <strong>{{ event.date|date('d.m.Y H:i') }}</strong>
+                                </p>
+                            </div>
+
+                            {% if event.photoPath %}
+                                <div class="mb-3 text-center">
+                                    <img src="{{ event.photoPath }}"
+                                         alt="{{ event.name }}"
+                                         class="img-fluid rounded shadow-sm"
+                                         style="max-height: 200px; object-fit: cover;">
+                                </div>
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label for="decline-message-{{ event.id }}" class="form-label">
+                                    Důvod zamítnutí
+                                </label>
+                                <textarea id="decline-message-{{ event.id }}"
+                                          name="decline_message"
+                                          class="form-control"
+                                          rows="4"
+                                          required></textarea>
+                                <div class="form-text">
+                                    Tento důvod bude zobrazen tvůrci a majiteli akce.
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="event_id" value="{{ event.id }}">
+                        </div>
+
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                                Zpět
+                            </button>
+                            <button type="submit" name="declineEvent" class="btn btn-sm btn-danger">
+                                Odeslat zamítnutí
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+

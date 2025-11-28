@@ -1,0 +1,27 @@
+<!--    menit dle prihlaseni    -->
+<li class="nav-item dropdown" id="loginDropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="loginDropdownToggle" data-bs-toggle="dropdown">
+        <i class="bi bi-person-circle"></i> Login
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-end shadow">
+        <form method="post" action="">
+            <h6 class="text-center mb-3">Přihlášení</h6>
+            <div class="mb-3">
+                <input type="text" name="email" class="form-control" placeholder="E-mail" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="password" name="password" class="form-control" placeholder="Heslo" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" name="login"> Přihlásit se </button>
+
+            <div class="text-center mt-3">
+                <small> Nemáte účet? <a href="/home?showRegister=1">Registrujte se</a></small>
+                <br>
+                <small><a href="/home?forgot=1">Zapomenuté heslo?</a></small>
+            </div>
+        </form>
+    </div>
+</li>

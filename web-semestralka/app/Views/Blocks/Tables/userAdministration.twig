@@ -1,0 +1,66 @@
+{# app/Views/Blocks/Tables/userAdministration.twig #}
+ <div class="container py-4">
+        <h2 class="mb-4">Administrace uživatelů</h2>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if allUsers is empty %}
+                    <div class="alert alert-info mb-0">
+                        Aktuálně zde nejsou žádní uživatelé.
+                    </div>
+                {% else %}
+                    <div class="table-responsive table-scroll-y">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th scope="col">Název uživatele</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Informace</th>
+                                <th scope="col" class="text-end">Smazání uživatele</th>
+                            </tr>
+
+                            {# FILTRAČNÍ ŘÁDEK #}
+                            <tr>
+                                <th>
+                                    <input type="text"
+                                           id="filter-username"
+                                           class="form-control form-control-sm user-filter-input"
+                                           placeholder="Hledat jméno…">
+                                </th>
+                                <th>
+                                    <input type="text"
+                                           id="filter-email"
+                                           class="form-control form-control-sm user-filter-input"
+                                           placeholder="Hledat email…">
+                                </th>
+                                <th>
+                                    <select id="filter-role"
+                                            class="form-select form-select-sm">
+                                        <option value="">Všechny role</option>
+                                        {% for role in roles %}
+                                            <option value="{{ role.id }}">{{ role.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </th>
+                                <th></th>
+                                <th class="text-end">
+                                    <button type="button"
+                                            id="filter-reset"
+                                            class="btn btn-sm btn-outline-secondary">
+                                        Vymazat filtry
+                                    </button>
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="user-table-body">
+                            {# samostatný partial s řádky #}
+                            {% include "Blocks/Tables/userAdministrationRows.twig" %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>

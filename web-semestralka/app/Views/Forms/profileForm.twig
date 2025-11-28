@@ -1,0 +1,57 @@
+<!-- --- PROFILOVÁ KARTA --- -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <h3 class="mb-4">Můj profil</h3>
+
+        <div class="row">
+            <!-- FOTO -->
+            <div class="col-md-3 text-center mb-3">
+                {% if user.photoPath %}
+                    <img src="{{ user.photoPath }}" class="rounded-circle mb-3" style="width:130px;height:130px;object-fit:cover;">
+                {% else %}
+                    <img src="/www/img/avatar_default.png" class="rounded-circle mb-3" style="width:130px;height:130px;object-fit:cover;">
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    <input type="file" name="photo" class="form-control form-control-sm mb-2">
+                    <button class="btn btn-outline-primary btn-sm w-100" name="uploadPhoto">Nahrát novou fotku</button>
+                    <small class="text-muted d-block mb-2">
+                        Maximální velikost souboru: 2 MB.
+                    </small>
+                </form>
+            </div>
+
+            <!-- FORMULÁŘ ÚPRAV -->
+            <div class="col-md-9">
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Uživatelské jméno</label>
+                            <input type="text" name="username" value="{{ user.username }}" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Uživatelský email</label>
+                            <input type="text"
+                                   name="web"
+                                   value="{{ user.email }}"
+                                   class="form-control"
+                                   readonly>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Informace o uživateli</label>
+                        <textarea id="content" name="information" class="form-control" rows="10" >{{ user.information|raw }}</textarea>
+                    </div>
+
+                    <button class="btn btn-success px-4" name="saveProfile">Uložit změny</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

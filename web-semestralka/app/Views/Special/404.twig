@@ -1,0 +1,39 @@
+{# app/Views/Special/404.twig #}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        {% if title is defined %}
+            {{ title }}
+        {% else %}
+            Propojovací systém akcí
+        {% endif %}
+    </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body class="bg-white">
+<div class="container min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center">
+                <div class="mb-3">
+                    <img src="/www/img/404-error-img.png" alt="404" class="img-fluid">
+                </div>
+
+                <h1 class="display-4 fw-bold">
+                    Oops! Nemůžeme najít požadovanou stránku.
+                </h1>
+                <br>
+                <a href="/home" class="btn btn-primary">
+                    Domů
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,1 +1,0 @@
-# propojovaciSystemAkci

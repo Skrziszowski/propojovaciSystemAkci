@@ -1,0 +1,344 @@
+{# app/Views/profilePage.twig #}
+{% extends "Layouts/base.twig" %}
+{% block footer %}{% endblock %}
+{% block content %}
+
+        {% if permissionError %}
+            {% include "Special/flashMessageError.twig" with { message: permissionError } %}
+
+        {% else %}
+            {% if flashMessageError %}
+                {% include "Special/flashMessageError.twig" with { message: flashMessageError } %}
+            {% endif %}
+            {% if flashMessageSuccess %}
+                {% include "Special/flashMessageSuccess.twig" with { message: flashMessageSuccess } %}
+            {% endif %}
+
+
+            <div class="container py-4">
+
+                <!-- Navigace mezi formuláři -->
+                <ul class="nav nav-pills mb-4" id="profileTabs" role="tablist">
+
+                    {% if canSeeProfileForm %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active"
+                                    id="tab-profile"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-profile"
+                                    type="button" role="tab">
+                                Můj profil
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeChangePasswordForm  %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-password"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-password"
+                                    type="button" role="tab">
+                                Změna hesla
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeEventForm %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-newEvent"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-newEvent"
+                                    type="button" role="tab">
+                                Nová akce
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeUserEvents %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-myEvents"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-events"
+                                    type="button" role="tab">
+                                Vypsané akce
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeEventOffer %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-offerEvents"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-offerEvents"
+                                    type="button" role="tab">
+                                Nabídka akcí
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeEventCheck %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-adminOfferEvents"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-adminOfferEvents"
+                                    type="button" role="tab">
+                                Potvrzování akcí
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeUserAdministration %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-adminUserTable"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-adminUserTable"
+                                    type="button" role="tab">
+                                Správa uživatelů
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeUserCreate %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-createAdmin"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-createAdmin"
+                                    type="button"
+                                    role="tab">
+                                Vytvořit admina
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeSuperEvent %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-superEvent"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-superEvent"
+                                    type="button" role="tab">
+                                Super Akce
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if canSeeMessages %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="tab-messages"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#panel-messages"
+                                    type="button" role="tab">
+                                Zprávy
+                                <span id="messages-count-badge"
+                                      class="badge bg-danger ms-1 {{ messages|length == 0 ? 'd-none' }}">
+                                    {{ messages|length }}
+                                </span>
+                            </button>
+                        </li>
+                    {% endif %}
+
+                </ul>
+
+                <!-- Obsah tabů -->
+                <div class="tab-content" id="profileTabsContent">
+                    {% if canSeeProfileForm %}
+                        <div class="tab-pane fade show active"
+                             id="panel-profile"
+                             role="tabpanel"
+                             aria-labelledby="tab-profile">
+                            {% block profile %}
+                                {% include "Forms/profileForm.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeChangePasswordForm %}
+                        <div class="tab-pane fade" id="panel-password" role="tabpanel" aria-labelledby="tab-password">
+                            {% block change_password %}
+                                {% include "Forms/changePasswordForm.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeEventForm %}
+                        <div class="tab-pane fade" id="panel-newEvent" role="tabpanel" aria-labelledby="tab-newEvent">
+                            {% block event %}
+                                {% include "Forms/eventForm.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeUserEvents %}
+                        <div class="tab-pane fade" id="panel-events" role="tabpanel" aria-labelledby="tab-myEvents">
+                            {% block Allevents %}
+                                {% include "Blocks/Cards/userEvents.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeEventOffer %}
+                        <div class="tab-pane fade" id="panel-offerEvents" role="tabpanel" aria-labelledby="tab-offerEvent">
+                            {% block offer %}
+                                {% include "Blocks/Tables/eventOffer.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeEventCheck %}
+                        <div class="tab-pane fade" id="panel-adminOfferEvents" role="tabpanel" aria-labelledby="tab-offerEvent">
+                            {% block adminOffer %}
+                                {% include "Blocks/Tables/eventCheck.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeUserAdministration %}
+                        <div class="tab-pane fade" id="panel-adminUserTable" role="tabpanel" aria-labelledby="tab-offerEvent">
+                            {% block adminUserTable %}
+                                {% include "Blocks/Tables/userAdministration.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeSuperEvent %}
+                        <div class="tab-pane fade" id="panel-superEvent" role="tabpanel" aria-labelledby="tab-offerEvent">
+                            {% block superEvent %}
+                                {% include "Blocks/Tables/superEvent.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeMessages %}
+                        <div class="tab-pane fade" id="panel-messages" role="tabpanel" aria-labelledby="tab-offerEvent">
+                            {% block Messages %}
+                                {% include "Blocks/Tables/messages.twig" %}
+                            {% endblock %}
+                        </div>
+                    {% endif %}
+
+                    {% if canSeeUserCreate %}
+                    <div class="tab-pane fade"
+                         id="panel-createAdmin"
+                         role="tabpanel"
+                         aria-labelledby="tab-createAdmin">
+                        {% block createAdmin %}
+                        {% include "Forms/registerForm.twig" with {
+                        fromSuperAdmin: true,
+                        hideRoleField:  true,
+                        defaultRoleId:  2,
+                        defaultRoleName:'Administrátor',
+                        showLoginLink:  false
+                        } %}
+                        {% endblock %}
+                    </div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+        {% endif %}
+
+    {% block scripts %}
+        {{ parent() }}
+        <script>
+            (function () {
+                const usernameInput = document.getElementById('filter-username');
+                const emailInput    = document.getElementById('filter-email');
+                const roleSelect    = document.getElementById('filter-role');
+                const resetBtn      = document.getElementById('filter-reset');
+                const tbody         = document.getElementById('user-table-body');
+
+                if (!tbody) return;
+
+                let timer = null;
+
+                function loadUsers() {
+                    const params = new URLSearchParams();
+                    params.set('page', 'adminUsersAjax');
+                    params.set('ajax', '1');
+
+                    const username = usernameInput.value.trim();
+                    const email    = emailInput.value.trim();
+                    const role     = roleSelect.value;
+
+                    if (username) params.set('username', username);
+                    if (email)    params.set('email', email);
+                    if (role)     params.set('role', role);
+
+                    fetch('index.php?' + params.toString(), {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                        .then(response => response.text())
+                        .then(html => {
+                            tbody.innerHTML = html;
+                        })
+                        .catch(err => {
+                            console.error('Chyba načítání uživatelů:', err);
+                        });
+                }
+
+                function debouncedLoad() {
+                    if (timer) clearTimeout(timer);
+                    timer = setTimeout(loadUsers, 300);
+                }
+
+                usernameInput && usernameInput.addEventListener('input', debouncedLoad);
+                emailInput && emailInput.addEventListener('input', debouncedLoad);
+                roleSelect && roleSelect.addEventListener('change', loadUsers);
+
+                resetBtn && resetBtn.addEventListener('click', function () {
+                    if (usernameInput) usernameInput.value = '';
+                    if (emailInput)    emailInput.value = '';
+                    if (roleSelect)    roleSelect.value = '';
+                    loadUsers();
+                });
+            })();
+        </script>
+
+        {% if user is defined and user %}
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const badge = document.getElementById('messages-count-badge');
+                    if (!badge) return;
+
+                    const es = new EventSource('sse_messages.php?uid={{ user.id }}');
+
+                    es.onmessage = function (event) {
+                        try {
+                            const data = JSON.parse(event.data);
+                            if (data.type !== 'messages') return;
+
+                            const count = parseInt(data.count ?? 0, 10);
+
+                            if (count > 0) {
+                                badge.textContent = count;
+                                badge.classList.remove('d-none');
+                            } else {
+                                badge.textContent = '0';
+                                badge.classList.add('d-none');
+                            }
+                        } catch (err) {
+                            console.error('SSE messages parse error', err);
+                        }
+                    };
+
+                    es.onerror = function (e) {
+                        console.warn('SSE connection error (messages)', e);
+                    };
+                });
+            </script>
+        {% endif %}
+    {% endblock %}
+
+{% endblock %}
+
+

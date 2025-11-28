@@ -1,0 +1,104 @@
+{# app/Views/Layouts/base.twig #}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if title is defined %}
+            {{ title }}
+        {% else %}
+            Propojovací systém akcí
+        {% endif %}
+    </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/www/style/{{ style }}.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    {# jQuery #}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+
+    {# Bootstrap bundle #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+{% block navbar %}
+    {% include ("Blocks/navbar.twig") %}
+{% endblock %}
+
+<main class="container py-4">
+    {% block content %}{% endblock %}
+</main>
+
+{% block footer %}
+    {% include ("Blocks/footer.twig") %}
+{% endblock %}
+
+{# --- GLOBAL SCRIPTS --- #}
+
+{# otevření login dropdownu podle ?openNav #}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% if openNav %}
+        const toggle = document.getElementById("loginDropdownToggle");
+        const dropdown = new bootstrap.Dropdown(toggle);
+        dropdown.show();
+        {% endif %}
+    });
+</script>
+
+{# CKEditor #}
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // ochrana: ať se init nespustí víckrát
+        if (window.__ckEditorsInitialized) {
+            return;
+        }
+        window.__ckEditorsInitialized = true;
+
+        // Editor v profilu
+        const profileEl = document.querySelector('#content');
+        if (profileEl) {
+            ClassicEditor
+                .create(profileEl)
+                .catch(error => console.error(error));
+        }
+
+        // Editor pro Novou akci
+        const eventEl = document.querySelector('#eventInfo');
+        if (eventEl) {
+            ClassicEditor
+                .create(eventEl)
+                .catch(error => console.error(error));
+        }
+    });
+</script>
+
+{# přepínání tabů podle ?tab=... #}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const params = new URLSearchParams(window.location.search);
+        const panelId = params.get('tab');      // např. "panel-adminOfferEvents"
+
+        if (!panelId) {
+            return; // výchozí "Můj profil"
+        }
+
+        const triggerEl = document.querySelector(`[data-bs-target="#${panelId}"]`);
+        if (!triggerEl) {
+            return;
+        }
+
+        const tab = new bootstrap.Tab(triggerEl);
+        tab.show();
+    });
+</script>
+
+{# místo pro další page-specific skripty #}
+{% block scripts %}{% endblock %}
+</body>
+</html>

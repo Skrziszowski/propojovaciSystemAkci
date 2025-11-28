@@ -1,0 +1,371 @@
+<h2 class="mb-4">Budoucí akce</h2>
+
+{% if events is empty %}
+    <div class="alert alert-info">
+        Zatím nemáte žádné vytvořené akce.
+    </div>
+{% else %}
+    <div class="row g-3" id="events-grid" data-per-page="{{ perPage|default(12) }}">
+    {% for event in events %}
+            <div class="col-sm-6 col-md-4 col-lg-3 js-event-item">
+                <div class="card h-100 shadow-sm no-select event-card "
+                     role="button"
+                     data-bs-toggle="modal"
+                     data-bs-target="#eventModal_{{ event.id }}">
+
+                    {% if event.photoPath %}
+                        <img src="{{ event.photoPath }}"
+                             alt="{{ event.name }}"
+                             class="card-img-top event-card-img">
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h5 class="card-title mb-1 text-truncate" title="{{ event.name }}">
+                            {{ event.name }}
+                        </h5>
+
+                        <div class="d-flex flex-wrap align-items-center gap-1 mb-2">
+                            {% if event.category_name %}
+                                <span class="badge bg-primary">
+                                    {{ event.category_name }}
+                                </span>
+                            {% endif %}
+                            {% if event.place_name %}
+                                <span class="badge bg-secondary">
+                                    {{ event.place_name }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <ul class="list-unstyled mb-2 small text-muted">
+                            <li class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event me-2"></i>
+                                <span>{{ event.date|date('d.m.Y H:i') }}</span>
+                            </li>
+
+                            {% if event.capacity is not null %}
+                                <li class="d-flex align-items-center">
+                                    <i class="bi bi-people me-2"></i>
+                                    <span>Kapacita: {{ event.capacity }}</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+
+                        {% if event.description %}
+                            <p class="card-text small text-muted mt-auto event-description">
+                                {{
+                                event.description
+                                |striptags
+                                |length > 100
+                                ? event.description|striptags|slice(0, 100) ~ '…'
+                                : event.description|striptags
+                                }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+
+        {# 2) Modal pro danou akci #}
+        <div class="modal fade" id="eventModal_{{ event.id }}" tabindex="-1"
+             aria-labelledby="eventModalLabel_{{ event.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventModalLabel_{{ event.id }}">
+                            {{ event.name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-5 mb-3 mb-md-0">
+                                {% if event.photoPath %}
+                                    <img src="{{ event.photoPath }}"
+                                         alt="{{ event.name }}"
+                                         class="img-fluid rounded">
+                                {% else %}
+                                    <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+                                         style="height:200px;">
+                                        <span class="text-muted small">Bez obrázku</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-7">
+                                <div class="mb-2">
+                                    {% if event.category_name %}
+                                        <span class="badge bg-primary me-1">
+                                            {{ event.category_name }}
+                                        </span>
+                                    {% endif %}
+
+                                    {% if event.place_name and event.place_id %}
+                                        <button type="button"
+                                                class="badge bg-secondary border-0 js-open-user-modal"
+                                                data-user-id="{{ event.place_id }}">
+                                            {{ event.place_name }}
+                                        </button>
+                                    {% endif %}
+
+                                </div>
+
+                                <ul class="list-unstyled small mb-3">
+                                    {% if event.place_name %}
+                                    <li class="mb-1">
+                                        <i class="bi bi-geo-alt"></i>
+                                        <strong>Místo:</strong>
+                                        {{ event.place_name }}
+                                    </li>
+                                    {% endif %}
+                                    <li class="mb-1">
+                                        <i class="bi bi-calendar-event me-2"></i>
+                                        <strong>Datum:</strong>
+                                        {{ event.date|date('d.m.Y H:i') }}
+                                    </li>
+
+                                    {% if event.capacity is not null %}
+                                        <li class="mb-1">
+                                            <i class="bi bi-people me-2"></i>
+                                            <strong>Kapacita:</strong>
+                                            {{ event.capacity }}
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                                {% if event.creator_name and event.user_id %}
+                                    <div class="d-flex align-items-center mb-3 js-open-user-modal"
+                                         data-user-id="{{ event.user_id }}"
+                                         style="cursor:pointer;">
+                                        {% if event.creator_photoPath %}
+                                            <img src="{{ event.creator_photoPath }}"
+                                                 alt="{{ event.creator_name }}"
+                                                 class="rounded-circle me-2"
+                                                 style="width:40px;height:40px;object-fit:cover;">
+                                        {% else %}
+                                            <img src="/www/img/avatar_default.png"
+                                                 alt="{{ event.creator_name }}"
+                                                 class="rounded-circle me-2"
+                                                 style="width:40px;height:40px;object-fit:cover;">
+                                        {% endif %}
+
+                                        <div class="small">
+                                            <div class="fw-semibold">{{ event.creator_name }}</div>
+                                            <div class="text-muted">Tvůrce akce</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if event.description %}
+                                    <h6>Popis akce</h6>
+                                    <p class="small mb-0">
+                                        {{ event.description|raw }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Zavřít
+                        </button>
+                        {# případně sem můžeš dát tlačítko "Přihlásit se" apod. #}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+
+    {% if totalPages is defined and totalPages > 1 %}
+        <nav aria-label="Stránkování akcí" class="mt-3">
+            <ul class="pagination justify-content-center">
+
+                {# ŠIPKA ZPĚT #}
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="prev" aria-label="Předchozí">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+
+                {# ČÍSLA STRÁNEK #}
+                {% for p in 1..totalPages %}
+                    <li class="page-item {{ p == 1 ? 'active' }}">
+                        <a class="page-link" href="#" data-page="{{ p }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+
+                {# ŠIPKA DOPŘEDU #}
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="next" aria-label="Další">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    {% endif %}
+
+
+
+    {# Modaly pro uživatele – tvůrci a místa z aktuálních eventů #}
+    {# Modaly pro uživatele – tvůrci a místa z aktuálních eventů #}
+    {% if userDetails is defined %}
+        {% for uid, u in userDetails %}
+            {% set upcoming = userUpcomingEvents[uid] ?? [] %}
+
+            <div class="modal fade" id="userModal_{{ u.id }}" tabindex="-1"
+                 aria-labelledby="userModalLabel_{{ u.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <div>
+                                <h5 class="modal-title mb-0" id="userModalLabel_{{ u.id }}">
+                                    {{ u.username }}
+                                </h5>
+                                <div class="small text-muted">
+                                    {{ u.email }}
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Zavřít"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                {# LEVÝ SLOUPEC – avatar, základní info #}
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <div class="d-flex flex-column align-items-center text-center">
+
+                                        <div class="mb-3">
+                                            {% if u.photoPath %}
+                                                <img src="{{ u.photoPath }}"
+                                                     alt="{{ u.username }}"
+                                                     class="rounded-circle"
+                                                     style="width:140px;height:140px;object-fit:cover;">
+                                            {% else %}
+                                                <img src="/www/img/avatar_default.png"
+                                                     alt="{{ u.username }}"
+                                                     class="rounded-circle"
+                                                     style="width:140px;height:140px;object-fit:cover;">
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="small text-muted mb-2">
+                                            {{ u.email }}
+                                        </div>
+
+                                        {# můžeš sem někdy doplnit badge role (organizátor / místo) #}
+                                    </div>
+                                </div>
+
+                                {# PRAVÝ SLOUPEC – popis + karty akcí #}
+                                <div class="col-md-8">
+
+                                    <div class="mb-3">
+                                        <h6 class="mb-1">O uživateli</h6>
+                                        {% if u.information %}
+                                            <div class="small p-2 rounded border bg-light">
+                                                {{ u.information|raw }}
+                                            </div>
+                                        {% else %}
+                                            <p class="small text-muted mb-0">
+                                                Uživatel zatím nevyplnil žádné informace.
+                                            </p>
+                                        {% endif %}
+                                    </div>
+
+                                    <hr class="my-3">
+
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h6 class="mb-0">Nadcházející akce</h6>
+                                        <span class="badge bg-secondary-subtle text-secondary ms-2">
+                                        {{ upcoming|length }}
+                                    </span>
+                                    </div>
+
+                                    {% if upcoming is not empty %}
+                                        <div class="row row-cols-1 gy-2">
+                                            {% for e in upcoming %}
+                                                <div class="col">
+                                                    <button type="button"
+                                                            class="w-100 text-start border-0 bg-transparent p-0 js-open-event-modal"
+                                                            data-event-id="{{ e.id }}">
+                                                        <div class="card shadow-sm">
+                                                            <div class="card-body py-2">
+                                                                <div class="d-flex justify-content-between align-items-start">
+                                                                    <div class="me-2">
+                                                                        <div class="small text-muted mb-1">
+                                                                            <i class="bi bi-calendar-event me-1"></i>
+                                                                            {{ e.date|date('d.m.Y H:i') }}
+                                                                        </div>
+                                                                        <div class="fw-semibold text-truncate">
+                                                                            {{ e.name }}
+                                                                        </div>
+                                                                        <div class="small text-muted text-truncate">
+                                                                            {% if e.place_name %}
+                                                                                @ {{ e.place_name }}
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="text-end">
+                                                                        {% set isCreator = (e.user_id == u.id) %}
+                                                                        {% set isPlace   = (e.place_id == u.id) %}
+
+                                                                        {% if isCreator %}
+                                                                            <div>
+                                                                            <span class="badge rounded-pill bg-primary-subtle text-primary">
+                                                                                Tvůrce
+                                                                            </span>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                        {% if isPlace %}
+                                                                            <div class="mt-1">
+                                                                            <span class="badge rounded-pill bg-secondary-subtle text-secondary">
+                                                                                Prostor
+                                                                            </span>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p class="small text-muted mb-0">
+                                            Žádné nadcházející akce.
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">
+                                Zavřít
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endif %}
+

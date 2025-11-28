@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-8">
+        <div class="card p-4">
+            <h3 class="text-center mb-3">Registrace</h3>
+            <form action="" method="POST" oninput="x.value=(heslo.value==heslo2.value)?'Shodná hesla':'Neshodná hesla'">
+
+                {# označení, že registrace jde ze superAdmin profilu #}
+                {% if fromSuperAdmin is defined and fromSuperAdmin %}
+                    <input type="hidden" name="from_superadmin" value="1">
+                {% endif %}
+
+                <div class="mb-2">
+                    <label for="jmeno" class="form-label">Uživatelské jméno</label>
+                    <input type="text" class="form-control" name="username" id="jmeno" required>
+                </div>
+                <div class="mb-2">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" name="email" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="heslo" class="form-label">Heslo</label>
+                    <input type="password" class="form-control" name="password" id="heslo" required>
+                </div>
+                <div class="mb-2">
+                    <label for="heslo2" class="form-label">Potvrzení hesla</label>
+                    <input type="password" class="form-control" name="password2" id="heslo2" required>
+                </div>
+                <div class="mb-2">
+                    <tr><td><output name="x" for="pas1 pas2"></output></td></tr>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    {# pokud přijde z profilu superAdmina (nebo explicitně schováno), role se nevybírá #}
+                    {% if (hideRoleField is defined and hideRoleField) or (fromSuperAdmin is defined and fromSuperAdmin) %}
+                        {# skrytá role (default 2 = admin) #}
+                        <input type="hidden"
+                               name="role"
+                               value="{{ defaultRoleId is defined ? defaultRoleId : 2 }}">
+
+                        <input type="text"
+                               class="form-control"
+                               value="{{ defaultRoleName is defined ? defaultRoleName : 'Administrátor' }}"
+                               disabled>
+                    {% else %}
+                        <select class="form-select" id="role" name="role" required>
+                            <option value="">Vyberte roli</option>
+                            {% for role in roles %}
+                                <option value="{{ role.id }}">{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </div>
+                <input type="submit" class="btn btn-primary w-100" name="register" value="Registrovat">
+                {% if showLoginLink is not defined or showLoginLink %}
+                    <div class="text-center mt-3">
+                        <small>Máte účet? <a href="/home?openNav=1">Přihlaste se</a></small>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>

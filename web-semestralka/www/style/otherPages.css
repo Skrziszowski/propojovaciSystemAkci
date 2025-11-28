@@ -1,0 +1,173 @@
+html {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+.dropdown-menu {
+    min-width: 300px;
+    padding: 20px;
+}
+.form-control:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+}
+
+.animate-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .6s ease-out;
+}
+.animate-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.feature-card {
+    background: linear-gradient(135deg, #ffffff, #f8f9ff);
+    border-radius: 1rem;
+}
+
+.feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d6efd10;
+    color: #0d6efd;
+    font-size: 1.3rem;
+}
+
+.feature-card h2 {
+    font-weight: 600;
+}
+
+.feature-card ul li + li {
+    margin-top: 0.25rem;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid #e0e3eb;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 1.75rem;
+    padding-left: 1.5rem;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-year {
+    position: absolute;
+    left: -1.35rem;
+    top: 0.1rem;
+    transform: translateX(-50%);
+}
+
+.timeline-year span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0d6efd, #6f42c1);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 0.25rem 0.75rem rgba(13, 110, 253, 0.3);
+}
+
+.timeline-content.card {
+    border-radius: 0.75rem;
+    background: #ffffff;
+}
+
+#our-journey h3.h6 {
+    font-weight: 600;
+}
+
+/* mobile – zmenší odsazení */
+@media (max-width: 575.98px) {
+    .timeline {
+        padding-left: 1rem;
+    }
+
+    .timeline-item {
+        padding-left: 1.25rem;
+    }
+
+    .timeline-year span {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+.animate-section {
+    opacity: 0;
+    transform: translateY(0);
+}
+
+.animate-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.no-select {
+    -webkit-user-select: none; /* Chrome, Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge starý */
+    user-select: none;         /* standard */
+}
+
+/* Ikonové kolečko vedle nadpisu bloku */
+.icon-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #0d6efd;
+    background-color: #ffffff;
+}
+
+/* Jemná animace na scroll – výchozí stav */
+.fade-section {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* Jakmile se prvek dostane do zorného pole */
+.fade-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body > main {
+    flex: 1 0 auto;
+}
+
+body > footer {
+    flex-shrink: 0;
+}

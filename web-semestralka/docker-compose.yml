@@ -1,0 +1,59 @@
+services:
+  web:
+    build: .
+    container_name: web-semestralka-web
+    ports:
+      - "8080:80"        # http://localhost:8080
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+      - mailhog
+    environment:
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+
+  db:
+    image: mariadb:11
+    container_name: web-semestralka-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: propojovaci_system_akci
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: web-semestralka-phpmyadmin
+  #   restart: always
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - "8081:80"        # http://localhost:8081
+  #   environment:
+  #     PMA_HOST: db
+  #    PMA_USER: root
+  #     PMA_PASSWORD: root
+
+  adminer:
+    image: adminer
+    container_name: web-semestralka-adminer
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8082:8080"      # http://localhost:8082
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: web-semestralka-mailhog
+    restart: always
+    ports:
+      - "1025:1025"      # SMTP
+      - "8025:8025"      # UI: http://localhost:8025
+
+volumes:
+  db_data:

@@ -1,0 +1,128 @@
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Přijaté zprávy</h1>
+        <span class="badge bg-secondary">{{ messages|length }} zpráv</span>
+    </div>
+
+    {% if messages is empty %}
+        <div class="alert alert-info">
+            Zatím zde nejsou žádné zprávy.
+        </div>
+    {% else %}
+        <div class="table-responsive table-scroll-y">
+            <table class="table table-hover align-middle table-sm">
+                <thead class="table-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Jméno</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col" style="width:50%;">Zpráva</th>
+                    <th scope="col" class="text-end">Akce</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for m in messages %}
+                    <tr>
+                        <td>{{ m.id }}</td>
+                        <td>{{ m.name }}</td>
+                        <td>{{ m.email }}</td> {# bez mailto #}
+
+                        <td>
+                            {% set isLong = m.message|length > 50 %}
+
+                            <span>
+                {% if isLong %}
+                    {{ m.message|slice(0, 50) ~ '…' }}
+                {% else %}
+                    {{ m.message }}
+                {% endif %}
+            </span>
+
+                            {% if isLong %}
+                                <br>
+                                <button class="btn btn-link btn-sm ps-0"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#messageModal_{{ m.id }}">
+                                    Zobrazit detail
+                                </button>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-end">
+                            <button
+                                    class="btn btn-sm btn-outline-primary"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#messageModal_{{ m.id }}">
+                                Odpovědět
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# modaly s plným textem + (budoucí) odpovědí #}
+        {% for m in messages %}
+            <div class="modal fade" id="messageModal_{{ m.id }}" tabindex="-1"
+                 aria-labelledby="messageModalLabel_{{ m.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="messageModalLabel_{{ m.id }}">
+                                Zpráva #{{ m.id }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Zavřít"></button>
+                        </div>
+                        <div class="modal-body">
+                            <dl class="row small mb-3">
+                                <dt class="col-sm-3">Jméno</dt>
+                                <dd class="col-sm-9">{{ m.name }}</dd>
+                                <dt class="col-sm-3">E-mail</dt>
+                                <dd class="col-sm-9">
+                                    <a href="mailto:{{ m.email }}">{{ m.email }}</a>
+                                </dd>
+                            </dl>
+
+                            <hr class="my-2">
+
+                            <p class="mb-0">
+                                {{ m.message|nl2br|raw }}
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <form method="post" class="w-100">
+                                <input type="hidden" name="message_id" value="{{ m.id }}">
+
+                                <div class="row g-2 w-100">
+                                    <div class="col-md-4">
+                                        <label class="form-label mb-1 small">Předmět</label>
+                                        <input type="text"
+                                               name="reply_subject"
+                                               class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label mb-1 small">Text odpovědi</label>
+                                        <textarea name="reply_text"
+                                                  rows="3"
+                                                  class="form-control form-control-sm"></textarea>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end justify-content-end">
+                                        <button class="btn btn-sm btn-primary"
+                                                type="submit"
+                                                name="sendReply">
+                                            Odeslat
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

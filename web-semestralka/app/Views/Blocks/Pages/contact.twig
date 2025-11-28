@@ -1,0 +1,50 @@
+<div class="container py-4">
+    <h1 class="mb-3">Kontakt</h1>
+
+    <p class="mb-4">
+        Máte dotaz k projektu nebo chcete navázat spolupráci? Napište nám.
+    </p>
+
+    <div class="row">
+        <!-- LEVÝ SLOUPEC – kontakty + mapa -->
+        <div class="col-md-6 mb-3">
+            <h2 class="h5">Kontaktní údaje</h2>
+            <ul class="list-unstyled mb-3">
+                <li><strong>E-mail:</strong> info@propojovacisystemakci.cz</li>
+                <li><strong>Telefon:</strong> +420 123 456 789</li>
+            </ul>
+
+            <h3 class="h6 mb-2">Kde nás najdete</h3>
+            <div class="ratio ratio-16x9 rounded shadow-sm overflow-hidden">
+                <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2579.160068990924!2d13.349845176884623!3d49.72661263921643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470aede20c7ab949%3A0xcdb1feb29be3183f!2sFakulta%20aplikovan%C3%BDch%20v%C4%9Bd%20-%20Z%C3%A1pado%C4%8Desk%C3%A1%20univerzita%20v%20Plzni!5e0!3m2!1scs!2scz!4v1763482388682!5m2!1scs!2scz"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Mapa – Plzeň">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- PRAVÝ SLOUPEC – formulář -->
+        <div class="col-md-6 mb-3">
+            <h2 class="h5">Kontaktní formulář</h2>
+            <form method="post">
+                <div class="mb-2">
+                    <label class="form-label">Jméno</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Zpráva</label>
+                    <textarea name="message" rows="3" class="form-control" required></textarea>
+                </div>
+                <button class="btn btn-primary btn-sm" name="sendContactEmail" type="submit">Odeslat</button>
+            </form>
+        </div>
+    </div>
+</div>

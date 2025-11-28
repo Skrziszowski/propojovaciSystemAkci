@@ -1,0 +1,80 @@
+{# app/Views/otherPage.twig #}
+{% extends "Layouts/base.twig" %}
+{% block content %}
+
+    {% if flashMessageError %}
+        {% include "Special/flashMessageError.twig" with { message: flashMessageError } %}
+    {% endif %}
+    {% if flashMessageSuccess %}
+        {% include "Special/flashMessageSuccess.twig" with { message: flashMessageSuccess } %}
+    {% endif %}
+
+    {# --- O PROJEKTU --- #}
+    {% if sub == 'about' %}
+
+        {% block about %}
+            {% include "Blocks/Pages/about.twig" %}
+        {% endblock %}
+
+        {# --- O NÁS --- #}
+    {% elseif sub == 'project' %}
+        {% block project %}
+            {% include "Blocks/Pages/project.twig" %}
+        {% endblock %}
+
+        {# --- KONTAKT --- #}
+    {% elseif sub == 'contact' %}
+
+        {% block contact %}
+            {% include "Blocks/Pages/contact.twig" %}
+        {% endblock %}
+
+    {% endif %}
+    {% block scripts %}
+        {{ parent() }}
+        <script>
+            $(function () {
+                function revealOnScroll() {
+                    $('.animate-section').each(function () {
+                        var $el = $(this);
+                        if ($el.hasClass('visible')) return;
+
+                        var elementTop = $el.offset().top;
+                        var scrollTop = $(window).scrollTop();
+                        var windowHeight = $(window).height();
+
+                        if (elementTop < scrollTop + windowHeight - 80) {
+                            $el.addClass('visible');
+                        }
+                    });
+                }
+
+                revealOnScroll();
+                $(window).on('scroll', revealOnScroll);
+            });
+        </script>
+        <script>
+            $(function () {
+                function checkFadeSections() {
+                    var windowBottom = $(window).scrollTop() + $(window).height() - 80; // mírný offset
+
+                    $('.fade-section').each(function () {
+                        var $el = $(this);
+                        var elemTop = $el.offset().top;
+
+                        if (elemTop < windowBottom) {
+                            $el.addClass('visible');
+                        }
+                    });
+                }
+
+                // Inicializace + reakce na scroll/resize
+                checkFadeSections();
+                $(window).on('scroll resize', checkFadeSections);
+            });
+        </script>
+    {% endblock %}
+{% endblock %}
+
+
+
